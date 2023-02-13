@@ -7,7 +7,10 @@
         <title>Lessons</title>
         <!-- Reference for the Vue.js -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Links for the styling-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+        <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap" rel="stylesheet">
         <!-- Stylesheet -->
         <link rel="stylesheet" href="style.css">
     </head>
@@ -15,17 +18,47 @@
     
     <body>
         <div class="title">
-            <h2> Lessons webstore</h2>
+            <h2> The Academy</h2>
         </div>
         <!-- OLD -->
         <div id="app">
             <header>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" >
+                    <h3 class="navItem">TheAcademy</h3>
+                    <button v-if="isCartFilled()" v-on:click="showItems()">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        {{cartItemCount}}
+                    </button>
+                    <button disabled="Disabled" v-else>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        {{cartItemCount}}
+                    </button>
+                    <!-- Button for ascending, descending, and filtering features-->
+                    <div class="sort-bar navItem">
+                        <select name="sortBy" v-model="sortBy">
+                            <option value="alphabetical">Alphabetical</option>
+                            <option value="price">Price</option>                
+                            <option value="location">Location</option>    
+                            <option value="availability">Availability</option>    
+                        </select>
+                        <button v-on:click="ascending = !ascending" class="sort-button">
+                            <i v-if="ascending" class="fa fa-sort-up"></i>
+                            <i v-else class="fa fa-sort-down"></i>
+                        </button>
+                    </div>
+                    <!-- Search bar -->
+                    <div class="search-bar navItem">
+                        <input type="text" v-model="searchValue" placeholder="Search Recipe" id="search-input"></input>
+                    </div>
+                </nav>
             </header>
 
             <div class="container">
                 <h1 class="title"> Lessons Shop </h1>
             <!-- Displaying the sorted Lessons using a v-for loop-->
                 <div class="lessons">
+                    <div v-if="isHidden0">
+                    <button v-on:click="showCheckout()">Show Lessons</button>
                     <div v-for="lesson in lessons">
                         <div  class="border border-white bg-light lessonBox">
                             <figure>
@@ -40,7 +73,14 @@
                         </div>
                         <br>
                     </div>
+                    </div>
                 </div>
+            <div v-if="!isHidden0">
+                <button v-on:click="showCheckout()">Show Lessons</button>
+                <div class="shoppingCart">
+                    <p><b>Your shopping Cart</b></p>
+                </div>
+            </div>
 
             </div>
         </div>
@@ -51,7 +91,13 @@
         let webstore = new Vue ({
             el: '#app',
             data:{
+                ascending:true,
+                    sortBy:"alphabetical",
+                    isHidden0:true,
                     lessons:[],
+                    cart:[],
+                    cartList:[],
+                    searchValue:''
             },    
            
             created: function(){
@@ -65,8 +111,148 @@
                         )
                     }
                 )
-            }
-        });
+            },
+            methods:{
+                showCheckout(){
+                        if(this.isHidden0 == false){
+                            this.isHidden0 = true;
+                        }else{
+                            this.isHidden0 = false;
+                        }
+                 },
+                 isCartFilled(){
+                        return this.cart.length > 0;   
+                    },
+            },
+            computed:{
+                cartItemCount: function () {
+                    // getting the size of cart array
+                    return this.cartList.length;
+                    },
+                    sortedLessons(){
+                        if(this.searchValue != '' && this.searchValue){
+                            let lessonsArray = this.lessons;
+                            lessonsArray= lessonsArray.filter((item)=>{
+                                return item.title.toUpperCase().includes(this.searchValue.toUpperCase())||item.location.toUpperCase().includes(this.searchValue.toUpperCase());
+                            })
+                            return lessonsArray;
+                        }
+                        if(this.sortBy=="price"){
+                            if(!this.ascending){
+                                let lessonsArray = this.lessons.slice(0);
+                                function compare(a,b){
+                                    if(a.price > b.price){
+                                        return 1;
+                                    }
+                                    if(a.price<b.price){
+                                        return -1;
+                                    }
+                                    return 0;
+                                }
+                                return lessonsArray.sort(compare).reverse()
+                            }else{
+                                    let lessonsArray = this.lessons.slice(0);
+                                    function compare(a,b){
+                                        if(a.price > b.price){
+                                            return 1;
+                                        }
+                                        if(a.price<b.price){
+                                            return -1;
+                                        }
+                                        return 0;
+                                    }
+                                    return lessonsArray.sort(compare);
+                                }
+                                
+                            }
+                        if(this.sortBy =="alphabetical"){
+                            if(!this.ascending){
+                            let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.title > b.title){
+                                    return 1;
+                                }
+                                if(a.title < b.title){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare).reverse();
+                            // sorting them 
+                            }else{
+                                let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.title > b.title){
+                                    return 1;
+                                }
+                                if(a.title < b.title){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare);
+                            }
+                        }
+                        if(this.sortBy =="location"){
+                            if(!this.ascending){
+                            let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.location > b.location){
+                                    return 1;
+                                }
+                                if(a.location < b.location){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare).reverse();
+                            // sorting them 
+                            }else{
+                                let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.location > b.location){
+                                    return 1;
+                                }
+                                if(a.location < b.location){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare);
+                            }
+                        }    
+                        if(this.sortBy =="availability"){
+                            if(!this.ascending){
+                            let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.space > b.space){
+                                    return 1;
+                                }
+                                if(a.space < b.space){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare).reverse();
+                            // sorting them 
+                            }else{
+                                let lessonsArray = this.lessons.slice(0);
+                            function compare(a,b){
+                                if(a.space > b.space){
+                                    return 1;
+                                }
+                                if(a.space < b.space){
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                            return lessonsArray.sort(compare);
+                            }
+                        }
+                    }
+            }   
+        }
+    );
     </script>
 
 </body>

@@ -97,7 +97,6 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
 app.get('/lessons', (request,response)=>{
     db.collection('lessons').find({}).toArray((err,res)=>{
         if(err) return next(e)
-            console.log(res);
             response.json(res);
     })
 });
