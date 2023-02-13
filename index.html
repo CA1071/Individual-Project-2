@@ -7,21 +7,44 @@
         <title>Lessons</title>
         <!-- Reference for the Vue.js -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <!-- Stylesheet -->
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="style.css">
     </head>
 
     
     <body>
+        <div class="title">
+            <h2> Lessons webstore</h2>
+        </div>
+        <!-- OLD -->
         <div id="app">
-            <div class="lesson" v-for="lesson in lessons">
-                <ul>
-                    <li>Topic:    {{lesson.topic}}    </li>
-                    <li>Location: {{lesson.location}} </li>
-                    <li>Price:    {{lesson.price}}    </li>
-                </ul>                    
+            <header>
+            </header>
+
+            <div class="container">
+                <h1 class="title"> Lessons Shop </h1>
+            <!-- Displaying the sorted Lessons using a v-for loop-->
+                <div class="lessons">
+                    <div v-for="lesson in lessons">
+                        <div  class="border border-white bg-light lessonBox">
+                            <figure>
+                                <img v-bind:src="lesson.image" class="img">
+                            </figure>
+                            <h2 v-text="lesson.title"></h2>
+                            <p v-html="lesson.description"></p>
+                            <p>Price: {{lesson.price}}</p>
+                            <p>Location:{{lesson.location}}</p>
+                            <p>Left: {{lesson.space}}</p>
+                    </button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+
             </div>
         </div>
+
     <!-- Script for Vue.js -->
     <script>
         //Instances of Vue.js
@@ -32,6 +55,7 @@
             },    
            
             created: function(){
+                // FETCH task: Fetch that retrieves all the lessons with GET
                 fetch("http://localhost:3000/lessons").then(
                     function(response){
                         response.json().then(

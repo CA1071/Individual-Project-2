@@ -44,6 +44,13 @@ let logger = (req,res,next) =>{
     
 app.use(logger);
 
+// Static file Middleware that returns lesson images, or an error message if file does not exist
+let checkImage = (req, res,next)=>{
+    //if image is not in 'images/' return error else return image
+
+    next()
+}
+
 
 // GET request for the the user enters : "localhost:3000"
 app.get('/',(req,res,next)=>{
@@ -86,6 +93,14 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
               })
           })
 
+// FETCH task: Fetch that retrieves all the lessons with GET
+app.get('/lessons', (request,response)=>{
+    db.collection('lessons').find({}).toArray((err,res)=>{
+        if(err) return next(e)
+            console.log(res);
+            response.json(res);
+    })
+});
 //app.listen() binds and listens the connections on the specified host and port.
 app.listen(3000,()=>{
     console.log('Express.js server running at localhost:3000');
