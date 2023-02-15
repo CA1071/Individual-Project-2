@@ -1,6 +1,7 @@
 const express = require('express'); // calling the express
 const MongoClient = require('mongodb').MongoClient;
-let results = null;
+const path = require('path')
+const fs = require('fs')
 //creating express.js instance:
 
 const app = express() // initializing express framework
@@ -45,11 +46,46 @@ let logger = (req,res,next) =>{
 app.use(logger);
 
 // Static file Middleware that returns lesson images, or an error message if file does not exist
-let checkImage = (req, res,next)=>{
-    //if image is not in 'images/' return error else return image
+app.use(function(req,res,next){
+    var filePath = path.join(__dirname,"images",req.url);
+    fs.stat(filePath,function(err,fileInfo){
+        if(err){
+            next();
+            return;
+        }
+        if (fileInfo.isFile()){
+            res.sendFile(filePath);
+        }
+        else
+            next();
+    });
+});
 
-    next()
-}
+// app.get("/image/:id",function(req,res,next){
+//     let para = req.params.id;
+//     let url ='/static/image/';
+//     url=url.concat(para);
+//     console.log(url)
+//     var filePath = path.join(__dirname,"image/",para);
+//     fs.stat(filePath,function(err,fileInfo){
+//         if (err ) {
+//             res.status(404).send({ message: "File Not Found!" });
+//         } 
+//         else 
+//         {
+//             res.sendFile(path.join(__dirname, "image\\"+para));
+//             next();
+//         }
+        
+//     });
+// });
+
+
+// app.use(function(req,res,next){
+//     res.status(404);
+//     res.send("File not found()!");
+//     next();
+// })
 
 
 // GET request for the the user enters : "localhost:3000"
