@@ -2,10 +2,11 @@ const express = require('express'); // calling the express
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path')
 const fs = require('fs')
+const cors = require("cors");
 //creating express.js instance:
 
 const app = express() // initializing express framework
-
+app.use(cors());
 //config express.js
 app.use(express.json()) 
 app.set('port',3000) // setting the port to 3000
@@ -45,47 +46,20 @@ let logger = (req,res,next) =>{
     
 app.use(logger);
 
-// Static file Middleware that returns lesson images, or an error message if file does not exist
-app.use(function(req,res,next){
-    var filePath = path.join(__dirname,"images",req.url);
-    fs.stat(filePath,function(err,fileInfo){
-        if(err){
+app.use('/images', function (req, res, next) {
+    // Uses path.join to find the path where the file should be
+    var filePath = path.join(__dirname, 'images', req.url);
+    // Built-in fs.stat gets info about a file
+    fs.stat(filePath, function (err, fileInfo) {
+        if (err) {
+            res.send("Image Does not Exist");
             next();
             return;
         }
-        if (fileInfo.isFile()){
-            res.sendFile(filePath);
-        }
-        else
-            next();
-    });
-});
-
-// app.get("/image/:id",function(req,res,next){
-//     let para = req.params.id;
-//     let url ='/static/image/';
-//     url=url.concat(para);
-//     console.log(url)
-//     var filePath = path.join(__dirname,"image/",para);
-//     fs.stat(filePath,function(err,fileInfo){
-//         if (err ) {
-//             res.status(404).send({ message: "File Not Found!" });
-//         } 
-//         else 
-//         {
-//             res.sendFile(path.join(__dirname, "image\\"+para));
-//             next();
-//         }
-        
-//     });
-// });
-
-
-// app.use(function(req,res,next){
-//     res.status(404);
-//     res.send("File not found()!");
-//     next();
-// })
+        if (fileInfo.isFile()) res.sendFile(filePath);
+        else next();
+    })
+})
 
 
 // GET request for the the user enters : "localhost:3000"
@@ -130,12 +104,7 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
           })
 
 // FETCH task: Fetch that retrieves all the lessons with GET
-app.get('/lessons', (request,response)=>{
-    db.collection('lessons').find({}).toArray((err,res)=>{
-        if(err) return next(e)
-            response.json(res);
-    })
-});
+
 //app.listen() binds and listens the connections on the specified host and port.
 app.listen(3000,()=>{
     console.log('Express.js server running at localhost:3000');
