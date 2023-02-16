@@ -257,11 +257,10 @@
                         //     })
                         // console.log(lessonOrders)
 
-
+                        // fetch that updates the lesson spaces using PUT after it is submitted
                         for(i in this.lessons ){
-                                console.log("_ID : " + this.lessons[i]._id);
-                                console.log("Title : " + this.lessons[i].title);
-                                fetch("http://localhost:3000/collections/lessons/" + this.lessons[i]._id,{
+                                console.log("_ID : " + String(this.lessons[i]._id) + "\n ID : : " + this.lessons[i].id + " \n Title : " + this.lessons[i].title)
+                                fetch("http://localhost:3000/collections/lessons/" + String(this.lessons[i]._id), {
                                     method: "PUT",
                                     headers:{
                                         "Content-Type":"application/json",
@@ -285,8 +284,8 @@
                             number:number,
                             lessons:lessonOrders
                         };
-                        console.log(order);
                         
+                        // Fetch that saves a new order with POST after it is submitted
                         fetch("http://localhost:3000/collection/orders",{
                             method:"POST",
                             headers:{
@@ -304,6 +303,7 @@
                             this.cart = [];
                             console.log("Thank you for shopping");
                             this.showCart();
+                            alert("Order submitted");
                     },
 
                     //checking if the lesson can be added to the cart 
@@ -321,10 +321,7 @@
                         lessons[lessons.indexOf(lessons.find(o=> o.title === title))].space+=1;
                         lessons[lessons.indexOf(lessons.find(o=> o.title === title))].availableInventory+=1;
                     },
-                    //method invoked when form is submitted
-                    submitForm(){
-                        alert("Order submitted");
-                    },
+
                     // method for validating the name in the order form
                     checkName(str) {
                         check = /\d/.test(str);
