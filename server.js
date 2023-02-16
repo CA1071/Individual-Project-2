@@ -2,6 +2,7 @@ const express = require('express'); // calling the express
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path')
 const fs = require('fs')
+const ObjectID = require('mongodb').ObjectId;
 const cors = require("cors");
 //creating express.js instance:
 
@@ -43,6 +44,7 @@ let logger = (req,res,next) =>{
       console.log(log);
       next();
     };
+
     
 app.use(logger);
 
@@ -53,6 +55,7 @@ app.use('/images', function (req, res, next) {
     fs.stat(filePath, function (err, fileInfo) {
         if (err) {
             res.send("Image Does not Exist");
+            console.log("Image Does not Exist");
             next();
             return;
         }
@@ -90,20 +93,34 @@ app.post('/collection/:collectionName',(req,res,next)=>{
     })
 })
 
-// REST API Task : PUT route that updates the number of available spaces in the ‘lesson’ collection
-const ObjectID = require('mongodb').ObjectId; 
-app.put('/collection/:collectionName/:id', (req, res, next) => {
-    req.collection.update(
-      {_id: new ObjectID(req.params.id)},
-      {$set: req.body},
-      {safe: true, multi: false},
-      (e, result) => {
-          if (e) return next(e)
-                res.send((result = 1) ? {msg: 'success'} : {msg: 'error'})    
-              })
-          })
+//retrieve an object by mongodb ID
 
-// FETCH task: Fetch that retrieves all the lessons with GET
+app.get('/collection/:collectionName/:id',(req,res,next)=>{
+    req.collection.findOne(
+        {_id:new ObjectID(req.params.id)},
+        (e,result)=>{
+            if(e) return next(e)
+                res.send(result);
+        
+    })
+})
+
+
+
+// REST API Task : PUT route that updates the number of available spaces in the ‘lesson’ collection
+app.put('/collections/:collectionName/:id', function (req, res, next) {
+    req.collection.updateOne({ _id: new ObjectId(req.params.id) },
+        { $set: req.body },
+        { safe: true, multi: false }, function (err, result) {
+            if (err) {
+                return next(err);
+            } else {
+                res.send((result.matchedCount === 1) ? { msg: "success" } : { msg: "error" });
+            }
+        }
+    ); 
+})
+
 
 //app.listen() binds and listens the connections on the specified host and port.
 app.listen(3000,()=>{
