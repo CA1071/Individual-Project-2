@@ -120,6 +120,8 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
           })
 
 
+//search
+
 //app.listen() binds and listens the connections on the specified host and port.
 app.listen(3000,()=>{
     console.log('Express.js server running at localhost:3000');

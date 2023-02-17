@@ -162,7 +162,6 @@
                         response.json().then(
                             function(json){
                                 app.lessons=json;
-                                console.log(app.lessons)
                             },
                         )
                     }
@@ -209,6 +208,7 @@
                     //adding lesson to the cart and cartlist
                     addItem(product) {
                         this.cart.push({
+                        _id:product._id,    
                         title: product.title,price: product.price,description: product.description,image:product.image
                         }),
                         this.cartList.push(product.id)
@@ -228,6 +228,7 @@
 
                     //checkout method
                     checkout(){
+                        // console.log(this.cart);
                         name = document.getElementById("name").value;
                         number = document.getElementById("number").value;
                         let lessonOrders = this.cart;
@@ -235,24 +236,25 @@
                         let spacesObj;
 
                         // fetch that updates the lesson spaces using PUT after it is submitted
-                        for(i in this.lessons ){
-                                console.log("_ID : " + String(this.lessons[i]._id) + "\n ID : : " + this.lessons[i].id + " \n Title : " + this.lessons[i].title)
-                                fetch("http://localhost:3000/collections/lessons/" + this.lessons[i]._id, {
-                                    method: "PUT",
-                                    headers:{
-                                        "Content-Type":"application/json",
-                                    },
-                                    body:JSON.stringify(this.lessons[i].space),
-                                })
-                                     .then((response) => {
-                                        console.log(response);
-                                        return response.text();
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error:", error);
-                                    })                            
+                        // for(i in this.cart){
+                        //         //console.log("_ID : " + String(this.cartList[i]._id) + "\n ID : : " + this.lessons[i].id + " \n Title : " + this.lessons[i].title)
+                        //         spacesObj = {space:this.cart[i].space}
+                        //         fetch("http://localhost:3000/collections/lessons/" + this.cart[i]._id, {
+                        //             method: "PUT",
+                        //             headers:{
+                        //                 "Content-Type":"application/json",
+                        //             },
+                        //             body:JSON.stringify(spacesObj),
+                        //         })
+                        //              .then((response) => {
+                        //                 console.log(response);
+                        //                 return response.text();
+                        //             })
+                        //             .catch((error) => {
+                        //                 console.error("Error:", error);
+                        //             })                            
                                 
-                        }
+                        // }
                         for(i in lessonOrders){
                             console.log(lessonOrders[i]);
                         }
