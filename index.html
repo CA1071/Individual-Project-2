@@ -206,7 +206,7 @@
                             this.isHidden1 = true;
                         }
                     },
-                    //adding lesson to the cart
+                    //adding lesson to the cart and cartlist
                     addItem(product) {
                         this.cart.push({
                         title: product.title,price: product.price,description: product.description,image:product.image
@@ -214,7 +214,6 @@
                         this.cartList.push(product.id)
                         product.space = product.space - 1;
                         product.availableInventory = product.availableInventory - 1; 
-                        console.log(JSON.stringify(this.cart));
                     },
                     //method for returning the count in the cart array
                     cartCount(id){
