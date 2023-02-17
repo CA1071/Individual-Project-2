@@ -10,7 +10,19 @@
 			"name": "Get Lessons",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/collection/lessons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"collection",
+						"lessons"
+					]
+				}
 			},
 			"response": []
 		},
@@ -78,14 +90,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/collection/lessons/63ea1d3113c324c606be313d",
+					"raw": "http://localhost:3000/collections/lessons/63ea1d3113c324c606be313d",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"collection",
+						"collections",
 						"lessons",
 						"63ea1d3113c324c606be313d"
 					]
