@@ -1,7 +1,7 @@
 const express = require('express'); // calling the express
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs') // file system module : allows to work with file system on the computer
 const ObjectID = require('mongodb').ObjectId;
 const cors = require("cors");
 //creating express.js instance:
@@ -109,7 +109,7 @@ app.get('/collection/:collectionName/:id',(req,res,next)=>{
 
 // REST API Task : PUT route that updates the number of available spaces in the ‘lesson’ collection
 app.put('/collection/:collectionName/:id', (req, res, next) => {
-    req.collection.update(
+    req.collection.updateOne(
       {_id: new ObjectID(req.params.id)},
       {$set: req.body},
       {safe: true, multi: false},

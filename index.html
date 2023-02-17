@@ -231,36 +231,14 @@
                     checkout(){
                         name = document.getElementById("name").value;
                         number = document.getElementById("number").value;
-                        let lessonOrders = this.cart
+                        let lessonOrders = this.cart;
+                        let lessonID = this.cartList;
                         let spacesObj;
-
-                        // lessonOrders.forEach((el)=>{
-                        //         console.log("ID : " + el._id);
-                        //         console.log("title :" + el.title);
-                        //         console.log("spaces : " + el.space);
-                        //         //http://localhost:3000/collection/lessons/63e1e9d8ab5bf767d0f38f2a
-                        //         fetch("http://localhost:3000/collection/lessons/" + el._id,{
-                        //             method:"PUT",
-                        //             header:{
-                        //                 "Content-Type":"application/json",
-                        //             },
-                        //             body:JSON.stringify(el.space),
-                        //         })
-                        //             .then((response)=>{
-                        //                 console.log(response);
-                        //                 return response.text();
-                        //             })
-                        //             .catch((error)=>{
-                        //                 console.log("Error:",error);
-                        //             });
-                        //         console.log("Updated space for " + el.title );
-                        //     })
-                        // console.log(lessonOrders)
 
                         // fetch that updates the lesson spaces using PUT after it is submitted
                         for(i in this.lessons ){
                                 console.log("_ID : " + String(this.lessons[i]._id) + "\n ID : : " + this.lessons[i].id + " \n Title : " + this.lessons[i].title)
-                                fetch("http://localhost:3000/collections/lessons/" + String(this.lessons[i]._id), {
+                                fetch("http://localhost:3000/collections/lessons/" + this.lessons[i]._id, {
                                     method: "PUT",
                                     headers:{
                                         "Content-Type":"application/json",
@@ -293,6 +271,7 @@
                             },
                             body: JSON.stringify(order),
                         })
+                            
                             .then((response)=>{
                                 console.log(response);
                                 return response.text();
@@ -301,6 +280,7 @@
                                 console.error("Error:",error);
                             })
                             this.cart = [];
+                            this.cartList = []
                             console.log("Thank you for shopping");
                             this.showCart();
                             alert("Order submitted");
